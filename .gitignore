@@ -74,18 +74,25 @@ $RECYCLE.BIN/
 *.swp
 *~
 
-# ==================== 项目特定 ====================
-# 上传的视频缓存（mock 会产生）
+# ==================== Project Specific ====================
+# Video uploads and results
 video_mock_jobs/
 temp_videos/
+uploads/
+results/
+server/uploads/
+server/results/
+server/.env
 *.mp4
 *.mov
 *.webm
 
-# 测试数据
+# Test data & artifacts
 test_data/
 sample_videos/
+*.png
+!app/src/main/res/**/*.png
 
-# 崩溃日志
+# Crash logs
 crash.log
 dropbox.txt
