@@ -1,0 +1,91 @@
+# ==================== Android / Gradle ====================
+# Gradle 构建产物
+.gradle/
+build/
+app/build/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# 本地配置（含机器路径、密钥）
+local.properties
+gradle.properties.bak
+
+# 签名文件（绝对不能上传）
+*.jks
+*.keystore
+keystore.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ==================== 后端 / Python ====================
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv/
+
+# 打包/发布
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ==================== 系统 / 编辑器 ====================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# 临时文件
+*.log
+*.tmp
+*.swp
+*~
+
+# ==================== 项目特定 ====================
+# 上传的视频缓存（mock 会产生）
+video_mock_jobs/
+temp_videos/
+*.mp4
+*.mov
+*.webm
+
+# 测试数据
+test_data/
+sample_videos/
+
+# 崩溃日志
+crash.log
+dropbox.txt

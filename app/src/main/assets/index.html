@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SketchVLM Mobile</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 屏幕 0：首次启动引导 -->
+<div class="screen" id="screen-onboarding" role="main" aria-label="歡迎頁面">
+    <div class="onboarding-content">
+        <div class="onboarding-logo">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="18" height="18" x="3" y="3" rx="2"/>
+                <path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/>
+                <path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/>
+            </svg>
+        </div>
+        <h1 class="onboarding-title" data-i18n="onboarding_title">歡迎使用</h1>
+        <p class="onboarding-desc" data-i18n="onboarding_desc">請選擇最適合您的模式</p>
+
+        <div class="mode-cards" role="radiogroup" aria-label="選擇使用模式">
+            <button class="mode-card" data-mode="normal" onclick="selectMode('normal')"
+                    aria-label="一般模式，標準介面，適合大多數使用者">
+                <span class="mode-icon">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </span>
+                <span class="mode-name" data-i18n="mode_normal">一般模式</span>
+                <span class="mode-desc" data-i18n="mode_normal_desc">標準介面，適合大多數使用者</span>
+            </button>
+
+            <button class="mode-card" data-mode="visual" onclick="selectMode('visual')"
+                    aria-label="視障模式，高對比度大字體，支援螢幕閱讀器">
+                <span class="mode-icon">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="16" cy="4" r="1"/>
+                        <path d="m18 19 1-7-6 1"/>
+                        <path d="m5 8 3-3 5.5 3-2.36 3.5"/>
+                        <path d="M4.24 14.5a5 5 0 0 0 6.88 6"/>
+                        <path d="M13.76 17.5a5 5 0 0 0-6.88-6"/>
+                    </svg>
+                </span>
+                <span class="mode-name" data-i18n="mode_visual">視障模式</span>
+                <span class="mode-desc" data-i18n="mode_visual_desc">高對比度、大字體，支援螢幕閱讀器</span>
+            </button>
+
+            <button class="mode-card" data-mode="voice" onclick="selectMode('voice')"
+                    aria-label="語音增強模式，按鈕語音播報，適合長者">
+                <span class="mode-icon">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/>
+                        <path d="M16 9a5 5 0 0 1 0 6"/>
+                        <path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>
+                    </svg>
+                </span>
+                <span class="mode-name" data-i18n="mode_voice">語音增強模式</span>
+                <span class="mode-desc" data-i18n="mode_voice_desc">按鈕語音播報，適合長者</span>
+            </button>
+        </div>
+
+        <button class="onboarding-confirm" id="onboardingConfirm"
+                onclick="confirmOnboarding()" disabled
+                data-i18n="onboarding_confirm"
+                aria-label="開始使用，進入主頁面">
+            開始使用
+        </button>
+    </div>
+</div>
+
+<!-- 屏幕 1：首页 -->
+<div class="screen" id="screen-home" role="main" aria-label="首頁">
+    <div class="lang-switch" role="group" aria-label="語言選擇">
+        <button class="lang-btn" data-lang="zh" onclick="setLang('zh')" aria-label="切換至繁體中文">繁體</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')" aria-label="Switch to English">English</button>
+    </div>
+
+    <button class="settings-btn" onclick="openSettings()" aria-label="開啟設定，更改使用模式">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </svg>
+    </button>
+
+    <div class="brand">
+        <h1 class="brand-title" data-i18n="home_title">SketchVLM Mobile</h1>
+        <p class="brand-subtitle" data-i18n="home_subtitle">AI 智慧視覺，讓溝通更簡單</p>
+    </div>
+
+    <button class="big-btn blue" onclick="pickVideo()" aria-label="選擇影片，從手機相簿中挑選一段影片">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
+        </svg>
+        <span data-i18n="choose_video">選擇影片</span>
+    </button>
+    <button class="big-btn green" onclick="recordVideo()" aria-label="拍攝影片，使用相機錄製一段新影片">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/>
+            <rect x="2" y="6" width="14" height="12" rx="2"/>
+        </svg>
+        <span data-i18n="record_video">拍攝影片</span>
+    </button>
+</div>
+
+<!-- 屏幕 2：裁剪 -->
+<div class="screen" id="screen-trim" role="main" aria-label="裁剪影片">
+    <div class="lang-switch" role="group" aria-label="語言選擇">
+        <button class="lang-btn" data-lang="zh" onclick="setLang('zh')" aria-label="切換至繁體中文">繁體</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')" aria-label="Switch to English">English</button>
+    </div>
+
+    <div class="trim-scroll-area">
+        <h2 class="trim-header-text" data-i18n="trim_title">選擇要處理的片段</h2>
+        <p class="trim-hint" data-i18n="trim_hint">拖動滑桿選擇範圍，點擊下方播放按鈕預覽</p>
+
+        <div class="video-player-wrap">
+            <video id="trimVideo" class="trim-video" playsinline webkit-playsinline preload="metadata" aria-label="影片預覽"></video>
+            <button class="play-btn" id="playBtn" onclick="togglePlay()" aria-label="播放或暫停預覽">
+                <svg class="icon icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="6 3 20 12 6 21 6 3"/>
+                </svg>
+                <svg class="icon icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <rect x="14" y="4" width="4" height="16" rx="1"/>
+                    <rect x="6" y="4" width="4" height="16" rx="1"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="trim-bar-wrap">
+            <div class="trim-bar">
+                <div class="trim-track" aria-hidden="true">
+                    <div class="trim-highlight" id="trimHighlight"></div>
+                </div>
+                <input type="range" id="trimStart" class="trim-slider" min="0" max="1000" value="0" oninput="onTrimChange(event)" aria-label="選擇片段起始時間"/>
+                <input type="range" id="trimEnd" class="trim-slider" min="0" max="1000" value="1000" oninput="onTrimChange(event)" aria-label="選擇片段結束時間"/>
+            </div>
+            <div class="trim-labels">
+                <span id="trimStartLabel">00:00</span>
+                <span class="trim-sep" aria-hidden="true">—</span>
+                <span id="trimEndLabel">00:00</span>
+            </div>
+        </div>
+
+        <div class="trim-info" id="trimInfo" aria-live="polite"></div>
+    </div>
+
+    <div class="bottom-bar">
+        <button class="bottom-btn red" onclick="goHome()" aria-label="返回首頁">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+            </svg>
+            <span data-i18n="back">返回</span>
+        </button>
+        <button class="bottom-btn green" onclick="confirmTrim()" aria-label="下一步，確認裁剪範圍">
+            <span data-i18n="next_step">下一步</span>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<!-- 屏幕 3：选功能 -->
+<div class="screen" id="screen-input" role="main" aria-label="選擇功能">
+    <div class="lang-switch" role="group" aria-label="語言選擇">
+        <button class="lang-btn" data-lang="zh" onclick="setLang('zh')" aria-label="切換至繁體中文">繁體</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')" aria-label="Switch to English">English</button>
+    </div>
+
+    <div class="input-scroll-area">
+        <h2 class="input-header" data-i18n="input_header">您需要什麼幫助？</h2>
+
+        <div class="category-tabs" id="categoryTabs" role="tablist" aria-label="功能分類"></div>
+
+        <div class="category-items-wrap">
+            <div class="category-items" id="categoryItems" role="group" aria-label="功能選項"></div>
+        </div>
+
+        <div class="current-prompt empty" id="currentPrompt"
+             data-i18n="prompt_placeholder" role="status" aria-live="polite"
+             aria-label="目前選擇的指令">
+            點擊上方功能，或按住下方按鈕說話
+        </div>
+
+        <input type="text" id="promptInput" class="prompt-input"
+               data-i18n-placeholder="input_placeholder"
+               placeholder="或在這裡自己打字…"
+               oninput="onPromptChange()"
+               aria-label="手動輸入您的需求"/>
+
+        <div class="voice-area">
+            <button class="voice-circle" id="voiceCircle"
+                    ontouchstart="startHold(event)" ontouchend="endHold(event)" ontouchcancel="endHold(event)"
+                    aria-label="按住說話，進行語音輸入">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <rect x="9" y="2" width="6" height="13" rx="3"/>
+                </svg>
+            </button>
+            <div class="voice-label" id="voiceLabel" data-i18n="hold_speak">按住 說話</div>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button class="bottom-btn red" onclick="backToTrim()" aria-label="返回裁剪頁面">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+            </svg>
+            <span data-i18n="back">返回</span>
+        </button>
+        <button class="bottom-btn green disabled" id="confirmBtn"
+                onclick="confirmAndProcess()" disabled aria-label="確認，開始處理影片">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 6 9 17l-5-5"/>
+            </svg>
+            <span data-i18n="confirm">確認</span>
+        </button>
+    </div>
+</div>
+
+<!-- 屏幕 4：思考中 -->
+<div class="screen" id="screen-thinking" role="main" aria-label="處理中">
+    <div class="thinking-spinner" aria-hidden="true"></div>
+    <div class="thinking-text" id="thinkingText" data-i18n="thinking"
+         role="status" aria-live="assertive" aria-atomic="true">
+        正在思考...
+    </div>
+    <div class="thinking-hint" id="thinkingHint" data-i18n="thinking_hint" aria-live="polite">
+        請稍等，AI 正在處理您的影片
+    </div>
+    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="處理進度">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+</div>
+
+<!-- 屏幕 5：成功页 -->
+<div class="screen" id="screen-success" role="main" aria-label="處理完成">
+    <div class="success-content">
+        <svg class="success-svg" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="success-circle" cx="60" cy="60" r="50"/>
+            <path class="success-check" d="M35 62 L53 80 L88 42"/>
+        </svg>
+        <div class="success-title" data-i18n="success_title">處理完成</div>
+        <div class="success-hint" data-i18n="success_hint">馬上就好，正在準備您的影片…</div>
+    </div>
+</div>
+
+<!-- 屏幕 6：结果 -->
+<div class="screen" id="screen-result" role="main" aria-label="處理結果">
+    <div class="lang-switch" role="group" aria-label="語言選擇">
+        <button class="lang-btn" data-lang="zh" onclick="setLang('zh')" aria-label="切換至繁體中文">繁體</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')" aria-label="Switch to English">English</button>
+    </div>
+
+    <div class="result-header" data-i18n="result_done" role="status" aria-live="assertive" aria-atomic="true">
+        處理完成
+    </div>
+
+    <video id="resultVideo" class="result-video" controls autoplay loop playsinline aria-label="標註完成的影片"></video>
+
+    <div class="bottom-bar">
+        <button class="bottom-btn red" onclick="goHome()" aria-label="再來一次，重新選擇影片">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                <path d="M21 3v5h-5"/>
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                <path d="M8 16H3v5"/>
+            </svg>
+            <span data-i18n="try_again">再來一次</span>
+        </button>
+        <button class="bottom-btn green" id="saveBtn" onclick="saveResult()" aria-label="儲存到相簿">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" x2="12" y1="15" y2="3"/>
+            </svg>
+            <span data-i18n="save">儲存到相簿</span>
+        </button>
+    </div>
+</div>
+
+<!-- 设置弹窗（更改模式） -->
+<div class="settings-overlay" id="settingsOverlay"
+     role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-card">
+        <div class="settings-title" id="settingsTitle" data-i18n="settings_title">使用模式</div>
+        <div class="settings-options" id="settingsOptions"></div>
+        <button class="settings-close" onclick="closeSettings()" data-i18n="settings_close">關閉</button>
+    </div>
+</div>
+
+<!-- 二次输入弹窗 -->
+<div class="input-modal-overlay" id="inputModalOverlay"
+     role="dialog" aria-modal="true" aria-labelledby="inputModalTitle">
+    <div class="input-modal">
+        <div class="input-modal-title" id="inputModalTitle">請輸入</div>
+        <div class="input-modal-input-row">
+            <input type="text" id="inputModalInput" class="input-modal-input"
+                   placeholder="" autocomplete="off"/>
+            <button class="input-modal-voice" id="inputModalVoice"
+                    ontouchstart="startModalHold(event)"
+                    ontouchend="endModalHold(event)"
+                    ontouchcancel="endModalHold(event)"
+                    aria-label="按住說話，用語音輸入">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <rect x="9" y="2" width="6" height="13" rx="3"/>
+                </svg>
+            </button>
+        </div>
+        <div class="input-modal-buttons">
+            <button class="input-modal-btn cancel" id="inputModalCancel" onclick="closeInputModal()">取消</button>
+            <button class="input-modal-btn confirm" id="inputModalConfirm" onclick="confirmInputModal()">確定</button>
+        </div>
+    </div>
+</div>
+
+<!-- 错误弹窗 -->
+<div class="error-overlay" id="errOverlay"
+     role="alertdialog" aria-modal="true" aria-labelledby="errTitle" aria-describedby="errMsg">
+    <div class="error-card">
+        <div class="error-icon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/>
+                <path d="M12 9v4"/><path d="M12 17h.01"/>
+            </svg>
+        </div>
+        <div class="error-title" id="errTitle">發生錯誤</div>
+        <div class="error-msg" id="errMsg"></div>
+        <button class="error-btn" id="errOkBtn" onclick="closeError()" data-i18n="err_ok" aria-label="確定，關閉錯誤提示">確定</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
